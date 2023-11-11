@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyacp2o7ay02s"]
+
+[ext_resource type="Script" path="res://objects/traps/spikes.gd" id="1_tlt5u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_amr01"]
+size = Vector2(34, 8)
+
+[node name="Spikes" type="Node2D"]
+script = ExtResource("1_tlt5u")
+
+[node name="SpikeHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SpikeHitbox"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_amr01")
+
+[connection signal="body_entered" from="SpikeHitbox" to="." method="_on_spike_hitbox_body_entered"]
