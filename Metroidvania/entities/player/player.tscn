@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ck80y5ur1yov6"]
+[gd_scene load_steps=21 format=3 uid="uid://ck80y5ur1yov6"]
 
 [ext_resource type="Script" path="res://entities/player/player.gd" id="1_vnvgp"]
 [ext_resource type="PackedScene" uid="uid://5p71iigo6ay5" path="res://scenes/character_state_machine.tscn" id="2_s31de"]
@@ -12,8 +12,10 @@
 [ext_resource type="Script" path="res://entities/player/player_wall_slide_state.gd" id="8_hsaj7"]
 [ext_resource type="Script" path="res://entities/player/player_dash_state.gd" id="9_3hige"]
 [ext_resource type="Script" path="res://entities/player/player_hit_state.gd" id="10_smj18"]
+[ext_resource type="Script" path="res://entities/player/player_attack_state.gd" id="12_qwur3"]
 [ext_resource type="PackedScene" uid="uid://cs3qhifcpiojx" path="res://scenes/damageable.tscn" id="12_r8vtw"]
 [ext_resource type="Script" path="res://entities/player/player_damageable.gd" id="13_70yml"]
+[ext_resource type="Script" path="res://entities/player/player_attack_hitbox.gd" id="15_okga0"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_ox5ju"]
 
@@ -22,17 +24,23 @@ radius = 9.0
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_2kued"]
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sbje"]
+size = Vector2(21, 10)
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 2
 script = ExtResource("1_vnvgp")
 ENABLE_DOUBLE_JUMPING = false
+DASH_SPEED = 300.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(16, 30)
 texture = SubResource("CanvasTexture_ox5ju")
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_0me3h")
+metadata/_edit_lock_ = true
 
 [node name="PlayerStateMachine" parent="." node_paths=PackedStringArray("character", "at", "current_state") instance=ExtResource("2_s31de")]
 script = ExtResource("3_dm23e")
@@ -68,6 +76,9 @@ damageable = NodePath("../../PlayerDamageable")
 [node name="Death" type="Node" parent="PlayerStateMachine"]
 script = ExtResource("3_ffce1")
 
+[node name="Attack" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("12_qwur3")
+
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -81,9 +92,22 @@ offset_right = 3.0
 offset_bottom = -17.0
 script = ExtResource("8_5a70s")
 state_machine = NodePath("../PlayerStateMachine")
+metadata/_edit_lock_ = true
 
 [node name="PlayerDamageable" parent="." node_paths=PackedStringArray("character") instance=ExtResource("12_r8vtw")]
 script = ExtResource("13_70yml")
 character = NodePath("..")
 
+[node name="AttackHitbox" type="Area2D" parent="."]
+modulate = Color(1, 0, 0.717647, 0.568627)
+collision_layer = 0
+collision_mask = 12
+monitorable = false
+script = ExtResource("15_okga0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackHitbox"]
+position = Vector2(19, 0)
+shape = SubResource("RectangleShape2D_3sbje")
+
 [connection signal="timeout" from="PlayerStateMachine/Dash/DashTimer" to="PlayerStateMachine/Dash" method="_on_dash_timer_timeout"]
+[connection signal="area_entered" from="AttackHitbox" to="AttackHitbox" method="_on_area_entered"]

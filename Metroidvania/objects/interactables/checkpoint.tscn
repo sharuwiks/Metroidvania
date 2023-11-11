@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://jhuts37u4td5"]
+
+[ext_resource type="Script" path="res://scripts/interaction_area.gd" id="1_4jfbv"]
+[ext_resource type="Script" path="res://objects/interactables/checkpoint.gd" id="1_u8ydd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_862xa"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tnj4m"]
+
+[node name="Checkpoint" type="StaticBody2D" groups=["interactables"]]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_u8ydd")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_862xa")
+
+[node name="InteractionArea" type="Area2D" parent="."]
+script = ExtResource("1_4jfbv")
+
+[node name="InteractionBox" type="CollisionShape2D" parent="InteractionArea"]
+shape = SubResource("RectangleShape2D_tnj4m")
+
+[connection signal="body_entered" from="InteractionArea" to="InteractionArea" method="_on_body_entered"]
+[connection signal="body_exited" from="InteractionArea" to="InteractionArea" method="_on_body_exited"]

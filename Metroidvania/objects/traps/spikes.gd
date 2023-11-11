@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name Spikes
+
 @export var damage : float = 10.0
 
 func _on_spike_hitbox_body_entered(body):
@@ -10,3 +12,6 @@ func _on_spike_hitbox_body_entered(body):
 				var direction_to_damageable = (body.global_position - global_position)
 				var direction_sign = sign(direction_to_damageable.x)
 				child.hit(damage, direction_to_damageable.normalized())
+
+func parry():
+	pass

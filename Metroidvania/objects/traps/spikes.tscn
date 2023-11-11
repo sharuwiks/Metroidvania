@@ -5,13 +5,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_amr01"]
 size = Vector2(34, 8)
 
-[node name="Spikes" type="Node2D"]
+[node name="Spikes" type="Node2D" groups=["parryable"]]
 script = ExtResource("1_tlt5u")
 
 [node name="SpikeHitbox" type="Area2D" parent="."]
-collision_layer = 0
+collision_layer = 8
 collision_mask = 2
-monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SpikeHitbox"]
 position = Vector2(0, -4)

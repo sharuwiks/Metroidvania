@@ -10,3 +10,4 @@ class_name PlayerStateMachine
 @onready var dash_state : State = $Dash
 @onready var hit_state : State = $Hit
 @onready var death_state : State = $Death
+@onready var attack_state : State = $Attack

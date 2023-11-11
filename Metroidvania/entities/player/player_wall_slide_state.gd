@@ -2,6 +2,7 @@ extends State
 
 func on_enter():
 	character.wall_sliding = true
+	character.has_dashed = false
 
 func state_process(delta):
 	character.handle_gravity(delta) 

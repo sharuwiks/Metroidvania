@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://drmvabhitpv4e"]
+[gd_scene load_steps=5 format=3 uid="uid://drmvabhitpv4e"]
 
 [ext_resource type="TileSet" uid="uid://4nssa0sed7ci" path="res://resources/stone_w_grass.tres" id="1_tm7lw"]
 [ext_resource type="PackedScene" uid="uid://ck80y5ur1yov6" path="res://entities/player/player.tscn" id="2_elvd8"]
 [ext_resource type="PackedScene" uid="uid://cyacp2o7ay02s" path="res://objects/traps/spikes.tscn" id="3_qk0dw"]
+[ext_resource type="PackedScene" uid="uid://jhuts37u4td5" path="res://objects/interactables/checkpoint.tscn" id="4_y6fh0"]
 
 [node name="World" type="Node2D"]
 
@@ -28,4 +29,7 @@ drag_horizontal_enabled = true
 drag_vertical_enabled = true
 
 [node name="Spikes" parent="." instance=ExtResource("3_qk0dw")]
-position = Vector2(410, 129)
+position = Vector2(428, 128)
+
+[node name="Checkpoint" parent="." instance=ExtResource("4_y6fh0")]
+position = Vector2(257, 183)

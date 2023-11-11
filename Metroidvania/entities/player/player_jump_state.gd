@@ -11,8 +11,10 @@ func state_process(delta):
 		next_state = state_machine.fall_state
 	elif character.inputs.jump_strength == 0 and character.velocity.y < 0:
 		cancel_jump(delta)
-	elif character.inputs.dash_pressed and character.can_dash:
+	elif character.inputs.dash_pressed and character.can_dash and not character.has_dashed:
 		next_state = state_machine.dash_state
+	elif character.inputs.attack_pressed:
+		next_state = state_machine.attack_state
 
 	character.handle_gravity(delta) 
 

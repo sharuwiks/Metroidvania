@@ -36,6 +36,7 @@ enum JUMP_DIRECTIONS {UP = -1, DOWN = 1}
 @export var ACTION_JUMP := "jump" ## The input mapping for jump
 @export var ACTION_SPRINT := "sprint" ## The input mapping for sprint
 @export var ACTION_DASH := "dash" ## The input mapping for sprint
+@export var ACTION_ATTACK := "attack" ## The input mapping for sprint
 
 @export_group("Movement Values")
 # The following float values are in px/sec when used in movement calculations with 'delta'
@@ -66,6 +67,10 @@ enum JUMP_DIRECTIONS {UP = -1, DOWN = 1}
 ## How long in seconds before landing should the game still accept the jump command, set this to zero to disable it
 @export_range(0, 1, 0.01) var JUMP_BUFFER_TIMER: float = 0.1
 
+@export_group("Combat Values")
+@export_range(0,100,0.1) var DAMAGE: float = 10.0
+@export_range(0,500,0.1) var PARRY_KNOCKBACK : float = 150.0
+@export_range(0,500,0.1) var HIT_KNOCKBACK : float = 100.0
 
 ## The player is sprinting when [param sprinting] is true
 var sprinting := false
@@ -77,6 +82,7 @@ var should_jump := false
 var wall_jump := false
 ## The player is jumping when [param jumping] is true
 var jumping := false
+
 ## The player is dashing when [param dashing] is true
 var dashing := false
 ## The player is wall sliding when [param wall_sliding] is true
@@ -120,6 +126,20 @@ func physics_tick(delta: float) -> void:
 
 	move_and_slide()
 
+	## Die if falling off the map
+	if global_position.y >= 200:
+		die()
+
+## Death Management
+func die():
+	GameManager.respawn_player()
+
+## Interaction Management
+func interact(area : InteractionArea):
+	if area.get_parent().is_in_group("interactables"):
+		if area.get_parent() is Checkpoint:
+			emit_signal("rest")
+			area.get_parent().interact(self)
 
 
 ## Manages the character's animations based on the current state and [param PLAYER_SPRITE] direction based on
@@ -140,6 +160,7 @@ func get_inputs() -> Dictionary:
 		jump_released = Input.is_action_just_released(ACTION_JUMP),
 		sprint_strength = Input.get_action_strength(ACTION_SPRINT) if ENABLE_SPRINT else 0.0,
 		dash_pressed = Input.is_action_just_pressed(ACTION_DASH),
+		attack_pressed = Input.is_action_just_pressed(ACTION_ATTACK),
 	}
 
 
@@ -187,3 +208,6 @@ func apply_friction(delta: float) -> void:
 	else:
 		velocity.x += fric
 
+##Applies knockback when hit or parrying
+func apply_knockback(knockback_direction : Vector2, knockback_force : float):
+	velocity = knockback_force * knockback_direction
